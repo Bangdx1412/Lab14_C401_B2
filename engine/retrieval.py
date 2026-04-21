@@ -6,9 +6,12 @@ falls back to lexical retrieval over local docs so Stage 2 can still run in an
 offline lab environment.
 """
 
+import json
 import os
 import re
 import sys
+import urllib.error
+import urllib.request
 from functools import lru_cache
 
 try:
@@ -154,6 +157,36 @@ def _retrieve_lexical(query: str, top_k: int) -> list:
     return ranked[:top_k]
 
 
+def _post_json(url: str, headers: dict[str, str], payload: dict, timeout: int) -> dict | None:
+    try:
+        import requests
+    except ImportError:
+        requests = None
+
+    if requests is not None:
+        try:
+            response = requests.post(url, headers=headers, json=payload, timeout=timeout)
+            if response.status_code == 200:
+                return response.json()
+        except Exception:
+            return None
+        return None
+
+    request = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode("utf-8"),
+        headers=headers,
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            if response.status != 200:
+                return None
+            return json.loads(response.read().decode("utf-8"))
+    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, json.JSONDecodeError):
+        return None
+
+
 def _get_embedding_fn():
     """
     Return an embedding function if the environment supports it.
@@ -161,8 +194,6 @@ def _get_embedding_fn():
     jina_key = os.getenv("JINA_API_KEY")
 
     if jina_key:
-        import requests
-
         def embed_jina(text: str) -> list | None:
             url = "https://api.jina.ai/v1/embeddings"
             headers = {
@@ -176,9 +207,9 @@ def _get_embedding_fn():
                 "dimensions": 1024,
             }
             try:
-                resp = requests.post(url, headers=headers, json=data, timeout=20)
-                if resp.status_code == 200:
-                    return resp.json()["data"][0]["embedding"]
+                payload = _post_json(url, headers=headers, payload=data, timeout=20)
+                if payload:
+                    return payload["data"][0]["embedding"]
             except Exception:
                 return None
             return None

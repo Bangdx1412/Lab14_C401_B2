@@ -84,10 +84,17 @@ async def run_benchmark_with_results(agent_version: str):
         return None, None
 
     version = "v2" if "v2" in agent_version.lower() or "optimized" in agent_version.lower() else "v1"
+    try:
+        judge = MultiModelJudge()
+    except Exception as exc:
+        print(f"❌ Cấu hình judge không hợp lệ: {exc}")
+        print("   Kiểm tra lại JUDGE_1_MODEL và JUDGE_2_MODEL trong .env.")
+        return None, None
+
     runner = BenchmarkRunner(
         MainAgent(version=version),
         ExpertEvaluator(),
-        MultiModelJudge(),
+        judge,
     )
     results = await runner.run_all(dataset, batch_size=5)
     summary = _build_summary(results, agent_version)
@@ -104,7 +111,7 @@ async def main():
     v2_results, v2_summary = await run_benchmark_with_results("Agent_V2_Optimized")
 
     if not v1_summary or not v2_summary:
-        print("❌ Không thể chạy Benchmark. Kiểm tra lại data/golden_set.jsonl.")
+        print("❌ Không thể chạy Benchmark. Kiểm tra lại data/golden_set.jsonl và cấu hình judge trong .env.")
         return
 
     print("\n📊 --- KẾT QUẢ SO SÁNH (REGRESSION) ---")
