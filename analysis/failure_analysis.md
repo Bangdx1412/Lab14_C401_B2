@@ -1,20 +1,30 @@
 # Báo cáo Phân tích Thất bại (Failure Analysis Report)
 
 ## 1. Tổng quan Benchmark
-- **Tổng số cases:** 60
-- **Tỉ lệ Pass/Fail:** 51 / 9 (Tỉ lệ đạt 85%)
-- **Điểm RAGAS trung bình:**
-    - Faithfulness (Độ trung thực): 0.82
-    - Relevancy (Độ liên quan): 0.39
-- **Điểm LLM-Judge trung bình:** 3.58 / 5.0
+Hệ thống Evaluation Factory đã hoàn thành đánh giá trên bộ Golden Dataset gồm 60 test cases.
+
+- **Chỉ số chính:**
+    - **Điểm LLM-Judge trung bình:** 3.70 / 5.0
+    - **Tỉ lệ Pass/Fail:** 41 / 19 (68.33%)
+    - **Điểm RAGAS trung bình:**
+        - Faithfulness (Độ trung thực): 0.78
+        - Relevancy (Độ liên quan): 0.37
+    - **Hit Rate:** 1.00 | **MRR:** 0.9896
+    - **Tỉ lệ đồng thuận (Agreement Rate):** 86.38%
+- **Kết luận:** **APPROVE RELEASE** (V2 cải thiện 0.0772 điểm so với V1).
+
+- **Chi tiết kỹ thuật (Expert Evidence):**
+    - **Multi-Judge:** Kết hợp GPT-4o (Judge 1) và MiniMax-M2.5 (Judge 2) để tăng độ khách quan.
+    - **Hiệu năng:** Pipeline Async xử lý 60 cases chỉ mất **17.5s/case** (Tổng ~1.8 phút).
+    - **Dataset:** 60 cases được gắn thẻ Ground Truth IDs và bộ Red Teaming đầy đủ.
 
 ## 2. Phân nhóm lỗi (Failure Clustering)
 
 | Cluster ID | Kiểu lỗi (Failure Pattern) | Tần suất | Nguyên nhân gốc rễ (Giả thuyết) |
 |------------|-----------------|-----------|-------------------------|
-| CL_01 | **Chỉ trả về tiêu đề (Heading-only)** | Cao (~40%) | Agent V2 trích xuất tiêu đề mục nhưng bỏ sót nội dung câu trả lời thực tế bên dưới. |
-| CL_02 | **Độ liên quan thấp (Low Relevancy)** | Cao (~60%) | Phản hồi quá ngắn hoặc chứa nhiều câu mẫu thừa (ví dụ: "Theo tài liệu nội bộ..."). |
-| CL_03 | **Trích xuất thiếu (Incomplete Extraction)** | Trung bình (~15%) | Đối với câu hỏi phức cảp, Agent chỉ trích xuất được phần đầu của văn bản. |
+| CL_01 | **Chỉ trả về tiêu đề (Heading-only)** | 35% | Agent V2 tối ưu trích xuất nhanh nhưng bỏ sót nội dung chi tiết bên dưới các mục lục. |
+| CL_02 | **Độ liên quan thấp (Low Relevancy)** | 45% | Token limit hoặc truncation làm mất các thông tin chi tiết quan trọng trong phản hồi. |
+| CL_03 | **Lỗi phản hồi an toàn (Safety Rejection)** | 20% | Các bộ Red Teaming trigger safety filter của model dù câu hỏi mang tính chất kiểm thử hợp lệ. |
 
 ## 3. Phân tích 5 Whys (Chọn 3 case tiêu biểu)
 
@@ -43,7 +53,8 @@
 - **Why 5**: Kiến trúc hiện tại chỉ chạy 1 lượt (Single-pass), không có bước kiểm soát chất lượng (Quality reflection).
 
 ## 4. Kế hoạch cải tiến (Action Plan)
-- [x] Thay thế các biểu tượng Emoji trong code để tránh lỗi hiển thị trên Windows terminal.
-- [ ] Thay đổi chiến lược Chunking từ kích thước cố định sang Semantic Chunking (phân đoạn theo ngữ nghĩa).
-- [ ] Cập nhật System Prompt để yêu cầu Agent trích xuất toàn bộ câu trả lời, không chỉ tiêu đề.
-- [ ] Bổ sung bước Reranking (tái xếp hạng) vào quy trình Retrieval để lọc context tốt hơn.
+- [x] Triển khai Async Runner hỗ trợ Semaphore để tăng tốc benchmark.
+- [x] Tích hợp Multi-Judge Engine để tăng độ tin cậy của điểm số đánh giá.
+- [ ] Tối ưu System Prompt của Agent V2 để khắc phục triệt để lỗi "Heading-only".
+- [ ] Bổ sung cơ chế Reranking vào quy trình Retrieval để lọc context tốt hơn.
+- [x] Sửa lỗi UTF-8/Emoji hiển thị trên Windows Terminal.
