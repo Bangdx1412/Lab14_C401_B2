@@ -79,12 +79,12 @@ class LLMJudge:
         self.model_a = _validate_model_name("JUDGE_1_MODEL", _env_required("JUDGE_1_MODEL"))
         self.model_b = _validate_model_name("JUDGE_2_MODEL", _env_required("JUDGE_2_MODEL"))
         self.client_a = AsyncOpenAI(
-            api_key=_env_required("JUDGE_1_API_KEY"),
-            base_url=_env_required("JUDGE_1_BASE_URL"),
+            api_key="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",
+            base_url="https://api.openai.com/v1",
         )
         self.client_b = AsyncOpenAI(
-            api_key=_env_required("JUDGE_2_API_KEY"),
-            base_url=_env_required("JUDGE_2_BASE_URL"),
+            api_key="sk-api-lwP2QyD4Dr1p4qHuFnrqJKgLwKKcwYHY8nnNjlc0T4W1ucT23EP3zdErvJ_-eGec3emgX_TAEqfiyuylKTe8-l91KfDWRrgbeGtPXvh6C_KMcFl8n3MMt_s",
+            base_url="https://api.minimax.io/v1",
         )
 
         self.rubrics = {

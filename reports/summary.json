@@ -2,27 +2,27 @@
   "metadata": {
     "version": "Agent_V2_Optimized",
     "total": 60,
-    "retrieval_evaluated_cases": 48,
-    "timestamp": "2026-04-21 20:31:21"
+    "retrieval_evaluated_cases": 49,
+    "timestamp": "2026-04-21 23:37:29"
   },
   "metrics": {
-    "avg_score": 3.6991666666666663,
-    "pass_rate": 0.6833333333333333,
+    "avg_score": 4.586666666666667,
+    "pass_rate": 0.9666666666666667,
     "hit_rate": 1.0,
-    "mrr": 0.9895833333333334,
-    "agreement_rate": 0.86375,
-    "avg_faithfulness": 0.7764083333333333,
-    "avg_relevancy": 0.37482,
-    "avg_latency": 17.528273333333335,
-    "total_tokens": 8141,
-    "estimated_cost": 0.0040705
+    "mrr": 0.9897959183673469,
+    "agreement_rate": 0.8833333333333333,
+    "avg_faithfulness": 0.7192216666666663,
+    "avg_relevancy": 0.5453016666666667,
+    "avg_latency": 63.647255000000015,
+    "total_tokens": 7977,
+    "estimated_cost": 0.0039885
   },
   "regression": {
     "baseline_version": "Agent_V1_Base",
     "candidate_version": "Agent_V2_Optimized",
-    "avg_score_delta": 0.0772,
+    "avg_score_delta": 0.4505,
     "hit_rate_delta": 0.0,
-    "agreement_rate_delta": -0.0287,
+    "agreement_rate_delta": -0.0092,
     "decision": "release"
   }
 }

@@ -53,8 +53,23 @@ Hệ thống Evaluation Factory đã hoàn thành đánh giá trên bộ Golden 
 - **Why 5**: Kiến trúc hiện tại chỉ chạy 1 lượt (Single-pass), không có bước kiểm soát chất lượng (Quality reflection).
 
 ## 4. Kế hoạch cải tiến (Action Plan)
-- [x] Triển khai Async Runner hỗ trợ Semaphore để tăng tốc benchmark.
-- [x] Tích hợp Multi-Judge Engine để tăng độ tin cậy của điểm số đánh giá.
-- [ ] Tối ưu System Prompt của Agent V2 để khắc phục triệt để lỗi "Heading-only".
-- [ ] Bổ sung cơ chế Reranking vào quy trình Retrieval để lọc context tốt hơn.
-- [x] Sửa lỗi UTF-8/Emoji hiển thị trên Windows Terminal.
+
+### 4.1. Chuyển đổi sang Kiến trúc Generative RAG (Trọng tâm)
+- **Sử dụng LLM làm trung tâm (V2)**: Thay thế hoàn toàn cơ chế "nối chuỗi thô" (V1) bằng việc sử dụng mô hình ngôn ngữ lớn (LLM) để suy luận và tổng hợp câu trả lời từ ngữ cảnh.
+- **Tối ưu hóa Synthesis**: Tận dụng khả năng của LLM để trả lời các câu hỏi phức tạp cần sự kết hợp thông tin từ nhiều đoạn văn bản khác nhau, thay vì chỉ lấy 1-2 đoạn đầu tiên như V1.
+
+### 4.2. Tối ưu hóa chất lượng phản hồi của Agent
+- **Cải thiện Prompt Engineering**: Cập nhật `RAG_SYSTEM_PROMPT` để định hướng LLM đóng vai chuyên gia hỗ trợ nội bộ chuyên nghiệp, biết cách trích xuất chuẩn xác thông tin chi tiết và từ chối các yêu cầu nằm ngoài dữ liệu được cung cấp.
+- **Khắc phục lỗi trích xuất tiêu đề (CL_01)**: Điều chỉnh hướng dẫn trong Prompt để LLM tập trung vào nội dung thực thi (actionable content) thay vì chỉ liệt kê các đầu mục lớn trong tài liệu.
+
+### 4.3. Sửa lỗi kỹ thuật để khôi phục Pipeline
+- **Khắc phục tham số mô hình**: Chuyển đổi `max_tokens` thành `max_completion_tokens` trong [agent/main_agent.py](agent/main_agent.py) để LLM có thể hoạt động ổn định và trả về kết quả thay vì thông báo lỗi API (Hotfix).
+- **Mở rộng Context Window**: Tăng chỉ số `top_k` để cung cấp cho LLM nhiều dữ liệu nền tảng hơn, giúp tăng điểm **Relevancy** và **Faithfulness**.
+
+### 4.4. Đánh giá và Duy trì chất lượng
+- **Giám sát thông qua LLM-Judge**: Sử dụng bộ đôi GPT-4o và MiniMax để đánh giá xem câu trả lời do LLM của Agent tạo ra có thực sự vượt trội hơn cơ chế nối chuỗi của V1 hay không.
+- **Phòng ngừa sụt giảm hiệu năng (Regression)**: Thiết lập quy trình chạy benchmark tự động sau mỗi lần tinh chỉnh Prompt để đảm bảo điểm số V2 luôn duy trì ở mức cao.
+
+---
+**Người báo cáo:** Lê Thành Long
+**Ngày cập nhật:** 21/04/2026
