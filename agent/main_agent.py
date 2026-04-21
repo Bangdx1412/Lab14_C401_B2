@@ -65,9 +65,9 @@ class MainAgent:
         self.top_k = 3
         
         # Khởi tạo client OpenAI Compatible
-        api_key = "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"
-        base_url = "https://api.openai.com/v1"  # Lấy URL của phía Compatible (ví dụ: Ollama, vLLM, LM Studio)
-        self.model_name = "gpt-5.4-nano"
+        api_key = os.getenv("OPENAI_API_KEY")
+        base_url = os.getenv("OPENAI_BASE_URL")
+        self.model_name = "gpt-5.4-nano" 
         
         self.client = OpenAI(
             api_key=api_key,
