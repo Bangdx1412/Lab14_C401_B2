@@ -61,7 +61,7 @@ class BenchmarkRunner:
                     },
                 },
                 "judge": {
-                    "final_score": 1.0,
+                    "final_score": 0.0,
                     "agreement_rate": 0.0,
                     "individual_scores": {},
                     "reasoning": str(exc),

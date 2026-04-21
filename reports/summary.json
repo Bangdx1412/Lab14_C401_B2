@@ -2,27 +2,27 @@
   "metadata": {
     "version": "Agent_V2_Optimized",
     "total": 60,
-    "retrieval_evaluated_cases": 50,
-    "timestamp": "2026-04-21 16:49:17"
+    "retrieval_evaluated_cases": 48,
+    "timestamp": "2026-04-21 20:31:21"
   },
   "metrics": {
-    "avg_score": 3.5751666666666675,
-    "pass_rate": 0.85,
+    "avg_score": 3.6991666666666663,
+    "pass_rate": 0.6833333333333333,
     "hit_rate": 1.0,
-    "mrr": 0.99,
-    "agreement_rate": 0.8223583333333331,
-    "avg_faithfulness": 0.818655,
-    "avg_relevancy": 0.39116999999999996,
-    "avg_latency": 0.013321666666666673,
-    "total_tokens": 8633,
-    "estimated_cost": 0.0043165
+    "mrr": 0.9895833333333334,
+    "agreement_rate": 0.86375,
+    "avg_faithfulness": 0.7764083333333333,
+    "avg_relevancy": 0.37482,
+    "avg_latency": 17.528273333333335,
+    "total_tokens": 8141,
+    "estimated_cost": 0.0040705
   },
   "regression": {
     "baseline_version": "Agent_V1_Base",
     "candidate_version": "Agent_V2_Optimized",
-    "avg_score_delta": 0.0228,
+    "avg_score_delta": 0.0772,
     "hit_rate_delta": 0.0,
-    "agreement_rate_delta": -0.0248,
+    "agreement_rate_delta": -0.0287,
     "decision": "release"
   }
 }
