@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "version": "Agent_V2_Optimized",
+    "total": 60,
+    "retrieval_evaluated_cases": 50,
+    "timestamp": "2026-04-21 16:49:17"
+  },
+  "metrics": {
+    "avg_score": 3.5751666666666675,
+    "pass_rate": 0.85,
+    "hit_rate": 1.0,
+    "mrr": 0.99,
+    "agreement_rate": 0.8223583333333331,
+    "avg_faithfulness": 0.818655,
+    "avg_relevancy": 0.39116999999999996,
+    "avg_latency": 0.013321666666666673,
+    "total_tokens": 8633,
+    "estimated_cost": 0.0043165
+  },
+  "regression": {
+    "baseline_version": "Agent_V1_Base",
+    "candidate_version": "Agent_V2_Optimized",
+    "avg_score_delta": 0.0228,
+    "hit_rate_delta": 0.0,
+    "agreement_rate_delta": -0.0248,
+    "decision": "release"
+  }
+}
